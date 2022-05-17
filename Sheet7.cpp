@@ -41,8 +41,8 @@ public:
         else
             values[top++] = x; // (2)
     }
-    /* Assuming values is the array that contains the values
-    and n is the stack size. */
+    /* Assuming values[] is the array that contains the
+    values while n is the stack size. */
 
 /*     void Stack::Pop()
     {
@@ -56,6 +56,20 @@ public:
             return values[top--]; // (2)
         }
     } */
+/*     void reverse(char str[])
+    {
+        int n = strlen(str);
+        Stack* stack = createStack(n);
+        int i;
+        for (i = 0; i<n; i++)
+            Push(stack,str[i]); // (1)
+        for (i = 0; i<n; i++)
+            str[i] = Pop(stack); // (2)
+    } /* Assuming Push() is modified to take 1 extra parameter, which
+    is the stack to be pushed into.
+    Push takes 1 parameter (data) by default which is value of str[i] in this case.
+    As well as Pop() being modified to take 1 parameter instead of none
+    to access the stack to pop from. */
 };
 
 /* int main()
