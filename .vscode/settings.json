@@ -23,7 +23,8 @@
         "xlocale": "cpp",
         "xstring": "cpp",
         "fstream": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "xiosbase": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
