@@ -1,7 +1,7 @@
 // Bonus Project - English Dictionary (15 pts)
 
 // Yousef Ibrahim Gomaa Mahmoud - 320210207 - Section 10 - Group 4
-// Code is also available on my GitHub protxtfile:
+// Code is also available on my GitHub DS-Labs repo:
 // https://github.com/37743/DS-Labs/tree/main/Bonus
 
 // Libraries/Classes Needed: (fstream, iostream, string)
@@ -24,13 +24,13 @@ class Dictionary
         DictNode* left;
         DictNode* right;
     };
-
+    // Counts amount of nodes/words in the tree.
     int countWords(DictNode* Root)
     {
         if (Root == NULL) return 0;
         else return countWords(Root->left)+countWords(Root->right)+1;
     }
-
+    // Inserts a new node.
     DictNode* insertNode(DictNode*& Root, string word) {
         if (Root == nullptr)
         {
@@ -44,20 +44,19 @@ class Dictionary
         else Root->right = insertNode(Root->right, word);
         return Root;
     }
-
+    // Modifies the string to the closest smaller string in the tree.
     void getPredecessor(DictNode* Root, string& word)
     {
         while(Root->right != NULL) Root = Root->right;
         word = Root->WordStr;
     }
-
+    // Delete method(s).
     void Delete(DictNode*& Root, string& word)
     {
         if (word < Root->WordStr) Delete(Root->left, word);
         else if (word > Root->WordStr) Delete(Root->right, word);
         else deleteNode(Root);
     }
-
     DictNode* deleteNode(DictNode*& Root)
     {
         string word;
@@ -77,7 +76,7 @@ class Dictionary
             Delete(Root->left, word);
         }
     }
-
+    // Returns true if the entered string has been found in the dictionary.
     void locateNode(DictNode* Root, string& word, bool& found)
     {
         if (Root == NULL) found = false;
@@ -93,7 +92,7 @@ class Dictionary
             found = true;
         }
     }
-
+    // Writes all nodes into the open .txt file.
     void inorderSave(DictNode* Root)
     {
         if (Root == nullptr) return;
@@ -104,20 +103,20 @@ class Dictionary
 
     // Public - Methods: (Dictionary(string), size(), insert(string), lookup(string), remove(string), inorderSave(DictNode))
     public:
-    ifstream txtfile;
-    ofstream txtfileout;
+    ifstream txtfile; // input instance
+    ofstream txtfileout; // output instance
     DictNode* Dict = nullptr;
     Dictionary(string txtfilepath)
     {
-        txtfile.open(txtfilepath);
+        txtfile.open(txtfilepath); // accesses the file for input.
         string WordStr;
         while(txtfile.is_open() && getline(txtfile,WordStr))
         {
-            insertNode(Dict,WordStr);
+            insertNode(Dict,WordStr); // inserts each line's string in the file as a node.
         }
-        txtfile.close();
+        txtfile.close(); // closes the file.
     }
-
+    // Calls the insert method on the dictionary class if node doesn't already exist.
     int insert(string word)
     {
         if (lookup(word)==0)
@@ -128,7 +127,7 @@ class Dictionary
         }
         else return 0;
     }
-
+    // Calls the locate method to search for the given string.
     int lookup(string word)
     {
         bool found = false;
@@ -136,7 +135,7 @@ class Dictionary
         if (found) return 1;
         else return 0;
     }
-
+    // Calls the remove method if node exists, otherwise suggests the closest string in lexographical order.
     int remove(string word)
     {
         if (lookup(word))
@@ -168,13 +167,13 @@ class Dictionary
             return 0;
         } 
     }
-
+    // Calls the count method to return amount of words in the dictionary.
     int size()
     {
         cout<<"Current word size is: "<<countWords(Dict)<<'\n';
         return 1;
     }
-
+    // Calls the inorder saving method to write all nodes' strings into the .txt file.
     int save()
     {
         inorderSave(Dict);
@@ -184,7 +183,7 @@ class Dictionary
 
 int main()
 {
-    Dictionary dct("dictionary.txt");
+    Dictionary dct("dictionary.txt"); // creates an object of type Dictionary with its filepath.
     cout<<"Hello! This is a dictionary. Created by Yousef Ibrahim Gomaa Mahmoud - ID: 320210207\n"<<
     "-------------------------\n"<<
     "You can look up words by entering:\t\t\t\t\t /lookup (InsertWord)\n"<<
@@ -193,8 +192,10 @@ int main()
     "To retrieve the amount of words in the dictionary, enter:\t\t /size\n"<<
     "To end the program and commit all changes into the .txt file, enter:\t /end\n"<<
     "-------------------------\n";
-    while(true)
-    {
+    while(true) // Infinite loop to keep the interface open.
+    {   /* Takes input and splits the string into 2 parts,
+         'command' and 'input string', which changes behavior of program
+         according to the given command.*/
         string inputStr = "";
         getline(cin,inputStr);
         stringstream data(inputStr);
@@ -206,12 +207,12 @@ int main()
             index++;
         }
         cout<<"\n";
-        if (command[0] == "/end")
+        if (command[0] == "/end") // Saves all changes if prompt enters: '/end'
         {
             dct.txtfileout.open("dictionary.txt");
             dct.save();
             dct.txtfileout.close();
-            break;
+            break; // Breaks out of the infinite loop.
         }
         else if (command[0] == "/lookup") cout<<dct.lookup(command[1])<<'\n';
         else if (command[0] == "/insert") cout<<dct.insert(command[1])<<'\n';
