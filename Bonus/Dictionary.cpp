@@ -4,6 +4,50 @@
 // Code is also available on my GitHub DS-Labs repo:
 // https://github.com/37743/DS-Labs/tree/main/Bonus
 
+//                 Procedure of Code Illustrated
+//                 ─────────┬──────────┬─────────
+//                          │  Starts  │
+//                          └────┬─────┴───────────────────────────────────────────────┐
+//                               │                                                     │
+//                               │      ┌───────────────────────────────────────────┐  │
+//               ┌───Reads file──┤      │                                           │  │
+//               │               │      ▼                                           │  │
+//               │    ┌──────────┴─────────────┐                                    │  │
+//               │    │ Reads input from Shell ├──Split into 'Command' and 'Input'──┘  │
+//               │    └──────────┬─────────────┘                                       │
+//               │               │                                                     │
+//               │               │ /size       ┌─────────────────────────────────┐     │
+//               │               ├────────────►│ Evaluate the size of dictionary │     │
+//               │               │             │ (Calculate the number of words) ├─────┤
+//  ┌────────────┴─────────────┐ │             └─────────────────────────────────┘     │
+//  │ Inserts each line in the │ │                                                     │
+//  │    txt file as a node    │ │ /lookup     ┌─────────────────────────────────┐     │
+//  └────────────┬─────────────┘ ├────────────►│  Searches for given string in   │     │
+//               │               │             │    the data structure (Tree)    ├─────┤
+//               │               │             └─────────────────────────────────┘     │
+//               │               │                                                     │
+//               │               │ /insert     ┌─────────────────────────────────┐     │
+//               └──────────────►├────────────►│ Inserts a node with given string│     │
+//                               │             │  as data in the data structure  ├─────┤
+//                               │             └─────────────────────────────────┘     │
+//                               │                                                     │
+//                               │ /remove     ┌─────────────────────────────────┐     │
+//                               ├────────────►│  Removes a node which has the   │     │
+//                               │             │      given string as data       ├─────┘
+//                               │             └─────────────────────────────────┘
+//                               │
+//                               │ /end        ┌─────────────────────────────────┐
+//                               └────────────►│ Writes all nodes' strings into  │
+//                                             │   the .txt file and concludes   │
+//                                             └───────────────┬─────────────────┘
+//                                                             │
+//                               ┌─────────────────────────────┘
+//                               ▼
+//                          ┌──────────┐
+//                          │   Ends   │
+//                          └──────────┘
+
+
 // Libraries/Classes Needed: (fstream, iostream, string)
 #include <iostream>
 #include <fstream>
