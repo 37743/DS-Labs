@@ -2,7 +2,7 @@
 
 // Yousef Ibrahim Gomaa Mahmoud - 320210207 - Section 10 - Group 4
 // Code is also available on my GitHub DS-Labs repo:
-// https://github.com/37743/DS-Labs/tree/main/Bonus
+// https://github.com/37743/DS-Labs/tree/main/Bonus 
 
 //                 Procedure of Code Illustrated
 //                 ─────────┬──────────┬─────────
@@ -205,7 +205,7 @@ class Dictionary
                     Node = Node->right;
                 }
             }
-            if (word.size()-preWord.size() > word.size()-postWord.size()) word = preWord;
+            if (word.size()-preWord.size() > postWord.size()-word.size()) word = preWord;
             else word = postWord;
             cout<<"Word not found! Did you perhaps mean "<<word<<"?\n";
             return 0;
