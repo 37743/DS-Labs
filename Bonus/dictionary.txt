@@ -1,5 +1,4 @@
 absolute
-adjust
 agree
 anticipation
 appear
@@ -7,7 +6,6 @@ ash
 assembly
 bench
 breathe
-cake
 cast
 castle
 chew
