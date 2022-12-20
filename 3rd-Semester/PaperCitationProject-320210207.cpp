@@ -73,7 +73,7 @@ int main()
 							  // Paper Name
 							  // Amount of times cited column. (To be used later during sorting)
             // T.A. Note: Uncomment this to print paperFile's contents.───────────────┐                                           
-            //                                                             ▼
+            //                                                                        ▼
             // cout<<paperFile[i-1][0]<<" "<<paperFile[i-1][1]<<" "<<paperFile[i-1][2]<<endl;
             i++;
         }
