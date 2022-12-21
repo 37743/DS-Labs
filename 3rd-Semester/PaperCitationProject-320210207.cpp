@@ -133,11 +133,9 @@ int main()
    	
     vector <vector <string>> unsortedPaperFile = paperFile; // For later use during bonus. (could be commented along with bonus)
     // Sort Function  
-    sortVector(paperFile);      // Initiate sorting..	O(n) = n*log^2(n)
-                                // using stable_sort() guarantees the original relative order of the inputs.
-                                // e.g. maintains order of duplicates.
+    sortVector(paperFile);      // Initiate sorting..	O(n) = n*log(n)
 							    // (n is the  number of iterations in the sort function) 
-							    // Total Time Complexity = n*log^2(n) + n + n = n*log^2(n)
+							    // Total Time Complexity = n*log(n) + n + n = n*log(n)
     int x=1;
     while(true)
     {
