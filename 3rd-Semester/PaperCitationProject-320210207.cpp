@@ -17,37 +17,53 @@ using namespace std;
 // Value of parameter is 2 as index of column 3 is 2.
 bool column3Sort(vector<string>& vector1, vector<string>& vector2) {return vector1[2] > vector2[2];}
 
+void sortVector(vector<vector <string>>& vector1) {sort(vector1.begin(), vector1.end(), column3Sort);}
+
 // Split Function using string stream 
-vector<string> split(string str, char delim)
+vector<string> split(string str, char delim=',') // Default delimiter is ','.
 {   
     vector<string> parts;
-    stringstream sstr(str);
+    stringstream sstr(str); // instance of stream class that operates on strings
     string part;
     while(getline(sstr,part,delim))
     {
-        parts.push_back(part);
+        parts.push_back(part); // adds string before and after given delimiter.
     }
     return parts;
 }
 
-vector<string> getClose(vector<vector <string>>& vector1, int userInput)
+vector<string> getClose(const vector<string>& target, const vector<vector<string>>& file, int& threshold)
 {
-    vector<string> close;
-    bool isClose;
-    for (int i=1; i<Papers; i++)
+    vector<int> similarCount(file.size());
+    // cout<<"Target's papers cited:\n";
+    for (int i = 0; i<file.size(); i++) // Iterate on whole file
     {
-        isClose = true;
-        for (int j=1; j<vector1[i].size(); j++)
+        for (string s : file[i]) // For every string in file[i] (current vector in the bigger vector)
         {
-            if (vector1[userInput][j] != vector1[i][j]) 
+            if (find(target.begin(), target.end(), s) != target.end()) // Find paper(s) with the same cited papers as the one given.
             {
-                isClose = false;
-                continue;
+                similarCount[i]++; // If found, increment current index by 1 for each similarity.
             }
         }
-        if (isClose) close.push_back(vector1[i][0]);
     }
-    return close;
+
+    int max = 0;
+    cout<<"\nPapers that share similiarities, have papers in common which amounts to:\n";
+    for (int i = 1; i<similarCount.size(); i++)   // For loop that updates max with the index
+                                                    // of the most similar paper in the vector.
+                                                    // Most similar paper has the highest count of similar strings.
+                                                    // (Same cited papers in the vector.)
+    {   
+        if (similarCount[i] != 0) cout<<" "<<similarCount[i]<<" ";
+        if (similarCount[i]>similarCount[max])
+        {
+            if (similarCount[i]>99) continue; // Prevent overflow
+            max = i;
+        }
+    }
+    cout<<'\n';
+    threshold = similarCount[max];
+    return file[max];
 }
 
 // MAIN PROGRAM
@@ -105,7 +121,7 @@ int main()
                 j=1; // Set number of papers that cited given paper to 0.
             }
             edgesFile[i-1].push_back(parts[0]); // Add & Increment number of papers that cited given paper by 1.
-            paperFile[citedPaperID][2] = to_string(stoi(paperFile[citedPaperID][2])+1);
+            paperFile[citedPaperID-1][2] = to_string(stoi(paperFile[citedPaperID-1][2])+1);
             
             // T.A. Note: Uncomment to print edgesFile's contents.────┐                                           
             //                                                        ▼
@@ -115,10 +131,13 @@ int main()
     }
 	File2.close();
    	
+    vector <vector <string>> unsortedPaperFile = paperFile; // For later use during bonus. (could be commented along with bonus)
     // Sort Function  
-    sort(paperFile.begin(), paperFile.end(), column3Sort); // Initiate sorting..	O(n) = n^2
-							   // (n is the  number of iterations in the sort function) 
-							   // Total Time Complexity = O(n^2) + n + n = O(n^2)
+    sortVector(paperFile);      // Initiate sorting..	O(n) = n*log^2(n)
+                                // using stable_sort() guarantees the original relative order of the inputs.
+                                // e.g. maintains order of duplicates.
+							    // (n is the  number of iterations in the sort function) 
+							    // Total Time Complexity = n*log^2(n) + n + n = n*log^2(n)
     int x=1;
     while(true)
     {
@@ -153,17 +172,13 @@ int main()
         }
     	break;
     }
-
-    vector<string> closePapers = getClose(paperFile,x2);
-    cout<<closePapers.size();
-    int threshold = closePapers.size();
-
-    for (int i = 1; i<threshold+1; i++)
-    {
-        cout<<i<<"st/nd/th Closest Paper:\n";
-        cout<<"Paper ID: "<<closePapers[threshold]
-        <<"\nPaper Name: "<<paperFile[stoi(closePapers[threshold])][1]
-        <<"\nNo. of Citations: "<<paperFile[stoi(closePapers[threshold])][2]
-        <<"\n------------------------\n";
-    }
+    int threshold=0;
+    vector<string> closePapers = getClose(edgesFile[x2],edgesFile,threshold);
+    cout<<"\nThreshold is: "<<threshold;
+    cout<<"\nClosest Paper:\n";
+    cout<<"Paper ID: "<<unsortedPaperFile[stoi(closePapers[0])][0]
+    <<"\nPaper Name: "<<unsortedPaperFile[stoi(closePapers[0])][1]
+    <<"\nNo. of Times Cited in Other Papers: "<<unsortedPaperFile[stoi(closePapers[0])][2]
+    <<"\n------------------------\n";
+    
 }
