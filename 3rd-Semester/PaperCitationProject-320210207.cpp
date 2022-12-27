@@ -12,10 +12,10 @@
 using namespace std;
 
 // Pre-define the amount of papers.
-#define Papers 82937 
+#define Papers 82937
 
 // Value of parameter is 2 as index of column 3 is 2.
-bool column3Sort(vector<string>& vector1, vector<string>& vector2) {return vector1[2] > vector2[2];}
+bool column3Sort(vector<string>& vector1, vector<string>& vector2) {return stoi(vector1[2]) > stoi(vector2[2]);}
 
 void sortVector(vector<vector <string>>& vector1) {sort(vector1.begin(), vector1.end(), column3Sort);}
 
@@ -29,13 +29,14 @@ vector<string> split(string str, char delim=',') // Default delimiter is ','.
     {
         parts.push_back(part); // adds string before and after given delimiter.
     }
+    // for (int i = 0; i<parts.size(); i++) std::cout<<parts[i]<<"\\";
     return parts;
 }
 
 vector<string> getClose(const vector<string>& target, const vector<vector<string>>& file, int& threshold)
 {
     vector<int> similarCount(file.size());
-    // cout<<"Target's papers cited:\n";
+    // std::cout<<"Target's papers cited:\n";
     for (int i = 0; i<file.size(); i++) // Iterate on whole file
     {
         for (string s : file[i]) // For every string in file[i] (current vector in the bigger vector)
@@ -48,21 +49,22 @@ vector<string> getClose(const vector<string>& target, const vector<vector<string
     }
 
     int max = 0;
-    cout<<"\nPapers that share similiarities, have papers in common which amounts to:\n";
+    int maxIndex = 0;
+    std::cout<<"\nPapers that share similiarities, have papers in common which amounts to:\n";
     for (int i = 1; i<similarCount.size(); i++)   // For loop that updates max with the index
                                                     // of the most similar paper in the vector.
                                                     // Most similar paper has the highest count of similar strings.
                                                     // (Same cited papers in the vector.)
     {   
-        if (similarCount[i] != 0) cout<<" "<<similarCount[i]<<" ";
-        if (similarCount[i]>similarCount[max])
+        if (similarCount[i] != 0) std::cout<<" ("<<similarCount[i]<<", " << i << ") ";
+        if (similarCount[i]>max)
         {
-            if (similarCount[i]>99) continue; // Prevent overflow
-            max = i;
+            max = similarCount[i];
+            maxIndex = i;
         }
     }
-    cout<<'\n';
-    threshold = similarCount[max];
+    std::cout<<'\n';
+    threshold = max;
     return file[max];
 }
 
@@ -90,7 +92,7 @@ int main()
 							  // Amount of times cited column. (To be used later during sorting)
             // T.A. Note: Uncomment this to print paperFile's contents.───────────────┐                                           
             //                                                                        ▼
-            // cout<<paperFile[i-1][0]<<" "<<paperFile[i-1][1]<<" "<<paperFile[i-1][2]<<endl;
+            // std::cout<<paperFile[i-1][0]<<" "<<paperFile[i-1][1]<<" "<<paperFile[i-1][2]<<endl;
             i++;
         }
     }
@@ -121,62 +123,69 @@ int main()
                 j=1; // Set number of papers that cited given paper to 0.
             }
             edgesFile[i-1].push_back(parts[0]); // Add & Increment number of papers that cited given paper by 1.
-            paperFile[citedPaperID-1][2] = to_string(stoi(paperFile[citedPaperID-1][2])+1);
-            
+            paperFile[citedPaperID-1][2] = to_string(stoi(paperFile[citedPaperID-1][2])+1);;
+            // std::cout << "Paper: " << citedPaperID << ", Count: " <<paperFile[citedPaperID-1][2]  << '\n';
+ 
             // T.A. Note: Uncomment to print edgesFile's contents.────┐                                           
             //                                                        ▼
-            // cout<<edgesFile[i-1][0]<<" "<<edgesFile[i-1][j-1]<<endl;
+            // std::cout<<edgesFile[i-1][0]<<" "<<edgesFile[i-1][j-1]<<endl;
             j++;
         }
     }
 	File2.close();
-   	
     vector <vector <string>> unsortedPaperFile = paperFile; // For later use during bonus. (could be commented along with bonus)
     // Sort Function  
     sortVector(paperFile);      // Initiate sorting..	O(n) = n*log(n)
 							    // (n is the  number of iterations in the sort function) 
 							    // Total Time Complexity = n*log(n) + n + n = n*log(n)
+        
     int x=1;
     while(true)
     {
-        cout<<"########### START ###########\n"
+        std::cout<<"########### START ###########\n"
     	<<"Kindly enter which (n)th highest cited paper to return:\n------------------------\n"<<endl;
     	cin>>x;
         if (x>Papers)
 	    {
-            cout<<"\nKindly enter a value in the given list of papers. (Less than "<<Papers<<")"
+            std::cout<<"\nKindly enter a value in the given list of papers. (Less than "<<Papers<<")"
             <<"\n########### RESTARTING ###########\n";
             continue;
 	    }
+        x--;
 	    break;
     }
     // N-th cited paper.
-    cout<<"\nThe "<<x<<"st/nd/th highest cited paper is Paper "<<paperFile[x][0]
+    std::cout<<"\nThe "<<x+1<<"st/nd/th highest cited paper is Paper "<<paperFile[x][0]
     <<"\nPaper Name: \""<<paperFile[x][1]<<"\""
     <<"\nNo. of Citations: "<<paperFile[x][2]<<" times.\n";
+    
     
     // BONUS
     int x2 = 1;
     while(true)
     {
-        cout<<"\n\n########### BONUS ###########\n"
+        std::cout<<"\n\n########### BONUS ###########\n"
         <<"Kindly enter which paper id to return closest group of papers to it:\n------------------------\n"<<endl;
         cin>>x2;
         if (x2>Papers)
         {
-            cout<<"\nKindly enter a value in the given list of papers. (Less than "<<Papers<<")"
+            std::cout<<"\nKindly enter a value in the given list of papers. (Less than "<<Papers<<")"
             <<"\n########### RESTARTING ###########\n";
             continue;
         }
     	break;
     }
     int threshold=0;
+    int paper_index=0;
+    // for (auto i : edgesFile) {paper_index++; if (stoi(i[0]) == x2){paper_index++; break;}}
     vector<string> closePapers = getClose(edgesFile[x2],edgesFile,threshold);
-    cout<<"\nThreshold is: "<<threshold;
-    cout<<"\nClosest Paper:\n";
-    cout<<"Paper ID: "<<unsortedPaperFile[stoi(closePapers[0])][0]
-    <<"\nPaper Name: "<<unsortedPaperFile[stoi(closePapers[0])][1]
-    <<"\nNo. of Times Cited in Other Papers: "<<unsortedPaperFile[stoi(closePapers[0])][2]
+ //   for (auto i : paperFile)
+   //     std::cout << "id: " << i[0] << ", title: " << i[1] << ", count: " << i[2] << '\n';
+    std::cout<<"\nThreshold is: "<<threshold;
+    std::cout<<"\nClosest Paper:\n";
+    std::cout<<"Paper ID: "<<unsortedPaperFile[stoi(closePapers[0])-1][0]
+    <<"\nPaper Name: "<<unsortedPaperFile[stoi(closePapers[0])-1][1]
+    <<"\nNo. of Times Cited in Other Papers: "<<unsortedPaperFile[stoi(closePapers[0])-1][2]
     <<"\n------------------------\n";
     
 }
