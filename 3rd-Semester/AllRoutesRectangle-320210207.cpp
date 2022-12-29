@@ -3,25 +3,28 @@
 using namespace std;
 
 // Recursive Function
-void printPaths(vector<vector <int>> mat, vector<int> route, int row, int col)
+void printPaths(vector<vector <int>> mat, vector<int> &route, int i, int j)
 {
     if (mat.size() == 0) return;
-    int M = mat[0].size();
-    int N = mat.size();
-    int i =0 ,int j = 0;
-    while (i < mat.size())
+    int M = mat.size();
+    int N = mat[0].size();
+    
+    if (i == M-1 && j == N-1)
     {
+        cout<<"{";
+        for (int k: route)
+        {
+            cout<<k<<", ";        
+        }
+        cout<<mat[i][j]<<"}"<<endl;
+        return;
+    }
+    else
         route.push_back(mat[i][j]);
 
-        if (i+1 < M) printPaths(mat, route, i+1, j);
-        if (j+1 < N) printPaths(mat, route, i, j+1);
-        if (i+1 < M && j+1 < N) printPaths(mat,route,i+1,j+1);
-    }
-    for (i: route)
-    {
-        cout<<i<<", ";        
-    }
-    cout<<mat[i][j]<<endl;
+    if (i+1 < M) printPaths(mat, route, i+1, j);
+    if (j+1 < N) printPaths(mat, route, i, j+1);
+    if (i+1 < M && j+1 < N) printPaths(mat,route,i+1,j+1);
 
     route.pop_back();
 }
