@@ -17,6 +17,11 @@ void printPaths(vector<vector <int>> mat, vector<int> route, int row, int col)
         if (j+1 < N) printPaths(mat, route, i, j+1);
         if (i+1 < M && j+1 < N) printPaths(mat,route,i+1,j+1);
     }
+    for (i: route)
+    {
+        cout<<i<<", ";        
+    }
+    cout<<mat[i][j]<<endl;
 
     route.pop_back();
 }
@@ -29,9 +34,9 @@ void printPaths(vector<vector <int>> const &mat)
 
 int main()
 {
-    vector<vector <int>> Matrix = {{1,2,3},
-                            {4,5,6},
-                            {7,8,9}};
+    vector<vector <int>> Matrix =   {{1,2,3},
+                                    {4,5,6},
+                                    {7,8,9}};
     printPaths(Matrix);
     return 0;
 }
